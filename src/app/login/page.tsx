@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { validateVisitor } from "@/lib/visitors";
+import { loginRoute } from "@/routes/authRoutes"; // 👈 Correcto, llamamos a la RUTA
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,16 +11,20 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const visitor = validateVisitor(username, password);
+    try {
+      const response = loginRoute({ username, password });
 
-    if (visitor) {
-      router.push(
-        `/welcome?name=${encodeURIComponent(visitor.fullName)}&ticket=${
-          visitor.ticketNumber
-        }`
-      );
-    } else {
-      setError("Usuario o contraseña incorrectos. Inténtalo de nuevo.");
+      if (response.success && response.data) {
+        router.push(
+          `/welcome?name=${encodeURIComponent(response.data.fullName)}&ticket=${
+            response.data.ticketNumber
+          }`
+        );
+      } else {
+        setError(response.message || "Usuario o contraseña incorrectos.");
+      }
+    } catch {
+      setError("Ocurrió un error al procesar tu solicitud.");
     }
   };
 
