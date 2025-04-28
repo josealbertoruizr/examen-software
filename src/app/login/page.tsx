@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { loginRoute } from "@/routes/authRoutes"; // 👈 Correcto, llamamos a la RUTA
+import { loginRoute } from "@/routes/authRoutes";
 
 export default function LoginPage() {
   const router = useRouter();
